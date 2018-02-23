@@ -57,6 +57,7 @@ library
                    Opaleye.Join,
                    Opaleye.Label,
                    Opaleye.Manipulation,
+                   Opaleye.Map,
                    Opaleye.Operators,
                    Opaleye.Order,
                    Opaleye.PGTypes,
@@ -67,6 +68,7 @@ library
                    Opaleye.Sql,
                    Opaleye.SqlTypes,
                    Opaleye.Table,
+                   Opaleye.TypeFamilies,
                    Opaleye.Values,
                    Opaleye.Internal.Aggregate,
                    Opaleye.Internal.Binary,
@@ -89,6 +91,7 @@ library
                    Opaleye.Internal.Table,
                    Opaleye.Internal.TableMaker,
                    Opaleye.Internal.Tag,
+                   Opaleye.Internal.TypeFamilies,
                    Opaleye.Internal.Unpackspec,
                    Opaleye.Internal.Values
                    Opaleye.Internal.HaskellDB.PrimQuery,
@@ -102,7 +105,8 @@ test-suite test
   default-language: Haskell2010
   type: exitcode-stdio-1.0
   main-is: Test.hs
-  other-modules: QuickCheck
+  other-modules: QuickCheck,
+                 TypeFamilies
   hs-source-dirs: Test
   build-depends:
     aeson >= 0.6 && < 1.3,
