@@ -3,6 +3,8 @@
 module Opaleye.RunQuery (module Opaleye.RunQuery,
                          -- * Datatypes
                          IRQ.Cursor,
+                         IRQ.FromFields,
+                         IRQ.FromField,
                          QueryRunner,
                          IRQ.QueryRunnerColumn,
                          IRQ.QueryRunnerColumnDefault (..),
