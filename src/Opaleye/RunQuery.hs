@@ -1,4 +1,5 @@
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE TypeFamilies #-}
 
 module Opaleye.RunQuery (module Opaleye.RunQuery,
                          -- * Datatypes
@@ -27,6 +28,7 @@ import qualified Opaleye.Internal.QueryArr as Q
 
 import qualified Data.Profunctor as P
 import qualified Data.Profunctor.Product.Default as D
+import qualified Data.Profunctor.Product.Map     as Map
 
 -- * Running 'S.Select's
 
@@ -55,6 +57,14 @@ runQuery :: D.Default QueryRunner fields haskells
          -> S.Select fields
          -> IO [haskells]
 runQuery = runQueryExplicit D.def
+
+runQueryInferrable :: ( D.Default QueryRunner columns haskells
+--                      , Map.Map IRQ.HaskellToSql haskells ~ columns
+                      , Map.Map IRQ.SqlToHaskell columns ~ haskells)
+                   => PGS.Connection
+                   -> S.Select columns
+                   -> IO [haskells]
+runQueryInferrable = Opaleye.RunQuery.runQuery
 
 -- | @runQueryFold@ streams the results of a query incrementally and consumes
 -- the results with a left fold.

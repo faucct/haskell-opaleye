@@ -147,7 +147,7 @@ Please volunteer to do that if you can.
 >          , Default p (TableField a String SqlText NN Req)
 >                      (TableField b String SqlText NN Req)
 >          , Default p (TableField a Day    SqlDate NN Req)
->                      (TableField b Day    SqlDate NN Req)) =>
+>                      (TableField b Day    SqlDate NN Req) ) =>
 >   Default p (Birthday a) (Birthday b) where
 >   def = pBirthday (Birthday D.def D.def)
 >
