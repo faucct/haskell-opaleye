@@ -34,14 +34,14 @@ joinExplicit :: U.Unpackspec columnsA columnsA
              -> (columnsA -> returnedColumnsA)
              -> (columnsB -> returnedColumnsB)
              -> PQ.JoinType
-             -> Q.Query columnsA -> Q.Query columnsB
+             -> Q.QueryArr b columnsA -> Q.QueryArr b columnsB
              -> ((columnsA, columnsB) -> Column T.PGBool)
-             -> Q.Query (returnedColumnsA, returnedColumnsB)
+             -> Q.QueryArr b (returnedColumnsA, returnedColumnsB)
 joinExplicit uA uB returnColumnsA returnColumnsB joinType
              qA qB cond = Q.simpleQueryArr q where
-  q ((), startTag) = ((nullableColumnsA, nullableColumnsB), primQueryR, T.next endTag)
-    where (columnsA, primQueryA, midTag) = Q.runSimpleQueryArr qA ((), startTag)
-          (columnsB, primQueryB, endTag) = Q.runSimpleQueryArr qB ((), midTag)
+  q (input, startTag) = ((nullableColumnsA, nullableColumnsB), primQueryR, T.next endTag)
+    where (columnsA, primQueryA, midTag) = Q.runSimpleQueryArr qA (input, startTag)
+          (columnsB, primQueryB, endTag) = Q.runSimpleQueryArr qB (input, midTag)
 
           (newColumnsA, ljPEsA) =
             PM.run (U.runUnpackspec uA (extractLeftJoinFields 1 endTag) columnsA)

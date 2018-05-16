@@ -40,7 +40,7 @@ import qualified Opaleye.Internal.QueryArr as Q
 import qualified Opaleye.Internal.HaskellDB.PrimQuery as HPQ
 import qualified Opaleye.Internal.PackMap as PM
 
-import           Opaleye.QueryArr  (Query)
+import           Opaleye.QueryArr  (Query, QueryArr)
 import qualified Opaleye.Column    as C
 import qualified Opaleye.Order     as Ord
 import qualified Opaleye.PGTypes   as T
@@ -71,7 +71,7 @@ query has zero rows it has zero groups, and thus zero rows in the
 result of an aggregation.
 
 -}
-aggregate :: Aggregator a b -> Query a -> Query b
+aggregate :: Aggregator a b -> QueryArr c a -> QueryArr c b
 aggregate agg q = Q.simpleQueryArr (A.aggregateU agg . Q.runSimpleQueryArr q)
 
 -- | Order the values within each aggregation in `Aggregator` using

@@ -212,24 +212,29 @@ in_ fcas (Column a) = Column $ case NEL.nonEmpty (F.toList fcas) of
 -- expediency, is currently implemented using a @LEFT JOIN@.  Please
 -- file a bug if this causes any issues in practice.
 inQuery :: D.Default O.EqPP columns columns
-        => columns -> Query columns -> Query (Column T.PGBool)
-inQuery c q = qj'
+        => Query columns -> QueryArr columns (Column T.PGBool)
+inQuery q = proc c -> do
+  qj' -< c
   where -- Remove every row that isn't equal to c
         -- Replace the ones that are with '1'
-        q' = A.arr (const 1)
-             A.<<< keepWhen (c .===)
-             A.<<< q
+        -- q' = A.arr (const 1)
+             -- A.<<< keepWhen (c .===)
+             -- A.<<< q
+        q' = proc c -> do
+          a <- q -< ()
+          restrict -< c .=== a
+          A.returnA -< 1
 
         -- Left join with a query that has a single row
         -- We either get a single row with '1'
         -- or a single row with 'NULL'
-        qj :: Query (Column T.PGInt4, Column (C.Nullable T.PGInt4))
+        -- qj :: QueryArr columns (Column T.PGInt4, Column (C.Nullable T.PGInt4))
         qj = Join.leftJoin (A.arr (const 1))
                            (Distinct.distinct q')
-                           (uncurry (.==))
+                           (uncurry (.===))
 
         -- Check whether it is 'NULL'
-        qj' :: Query (Column T.PGBool)
+        -- qj' :: QueryArr columns (Column T.PGBool)
         qj' = A.arr (Opaleye.Operators.not
                      . Column.isNull
                      . snd)

@@ -3,7 +3,7 @@
 module Opaleye.Distinct (module Opaleye.Distinct, distinctExplicit)
        where
 
-import           Opaleye.QueryArr (Query)
+import           Opaleye.QueryArr (QueryArr)
 import           Opaleye.Internal.Distinct (distinctExplicit, Distinctspec)
 
 import qualified Data.Profunctor.Product.Default as D
@@ -26,5 +26,5 @@ import qualified Data.Profunctor.Product.Default as D
 -- QueryArr a b@.  Such a function would allow violation of SQL's
 -- scoping rules and lead to invalid queries.
 distinct :: D.Default Distinctspec columns columns =>
-            Query columns -> Query columns
+  QueryArr b columns -> QueryArr b columns
 distinct = distinctExplicit D.def

@@ -39,10 +39,10 @@ import qualified Data.Profunctor.Product.Default as D
 leftJoin  :: (D.Default U.Unpackspec columnsL columnsL,
               D.Default U.Unpackspec columnsR columnsR,
               D.Default J.NullMaker columnsR nullableColumnsR)
-          => Query columnsL  -- ^ Left query
-          -> Query columnsR  -- ^ Right query
+  => QueryArr b columnsL  -- ^ Left query
+  -> QueryArr b columnsR  -- ^ Right query
           -> ((columnsL, columnsR) -> Column T.PGBool) -- ^ Condition on which to join
-          -> Query (columnsL, nullableColumnsR) -- ^ Left join
+          -> QueryArr b (columnsL, nullableColumnsR) -- ^ Left join
 leftJoin = leftJoinExplicit D.def D.def D.def
 
 -- | 'leftJoinA' is a convenient way of using left joins within arrow
@@ -81,9 +81,9 @@ fullJoin = fullJoinExplicit D.def D.def D.def D.def
 leftJoinExplicit :: U.Unpackspec columnsL columnsL
                  -> U.Unpackspec columnsR columnsR
                  -> J.NullMaker columnsR nullableColumnsR
-                 -> Query columnsL -> Query columnsR
+                 -> QueryArr b columnsL -> QueryArr b columnsR
                  -> ((columnsL, columnsR) -> Column T.PGBool)
-                 -> Query (columnsL, nullableColumnsR)
+                 -> QueryArr b (columnsL, nullableColumnsR)
 leftJoinExplicit uA uB nullmaker =
   J.joinExplicit uA uB id (J.toNullable nullmaker) PQ.LeftJoin
 
